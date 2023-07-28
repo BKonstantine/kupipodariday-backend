@@ -2,6 +2,11 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getDbConfig } from './config/db.config';
+import { UsersModule } from './users/users.module';
+import { WishesModule } from './wishes/wishes.module';
+import { WishlistsModule } from './wishlists/wishlists.module';
+import { OffersModule } from './offers/offers.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -11,6 +16,11 @@ import { getDbConfig } from './config/db.config';
       inject: [ConfigService],
       useFactory: getDbConfig,
     }),
+    UsersModule,
+    WishesModule,
+    WishlistsModule,
+    OffersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
