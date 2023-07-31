@@ -1,7 +1,6 @@
 import {
   IsString,
-  MinLength,
-  MaxLength,
+  Length,
   IsEmail,
   IsNotEmpty,
   IsUrl,
@@ -14,13 +13,12 @@ export class SignupUserResponseDto {
   @IsInt()
   id: number;
 
-  @MinLength(1)
-  @MaxLength(64)
+  @Length(1, 64)
   @IsNotEmpty()
   @IsString()
   username: string;
 
-  @MaxLength(200)
+  @Length(1, 200)
   @IsString()
   about: string;
 
