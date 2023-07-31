@@ -1,5 +1,7 @@
-import { Entity, Column } from 'typeorm';
-import { IsArray, IsString, IsUrl, Length } from 'class-validator';
+import { Entity, Column, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
+import { IsString, IsUrl, Length, IsOptional } from 'class-validator';
+import { User } from 'src/users/entities/user.entity';
+import { Wish } from 'src/wishes/entities/wish.entity';
 import { BaseEntity } from 'src/entities/base.entity';
 
 @Entity()
@@ -10,13 +12,19 @@ export class Wishlist extends BaseEntity {
   name: string;
 
   @Column()
+  @Length(1, 1500)
+  @IsOptional()
+  @IsString()
+  description: string;
+
+  @Column()
   @IsUrl()
   image: string;
 
-  @Column()
-  owner: string;
+  @ManyToOne(() => User, (user) => user.wishlists)
+  owner: User;
 
-  @Column()
-  @IsArray()
-  items: [];
+  @ManyToMany(() => Wish, (wish) => wish.name)
+  @JoinTable()
+  items: Wish[];
 }

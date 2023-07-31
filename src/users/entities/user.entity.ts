@@ -1,14 +1,19 @@
-import { Entity, Column } from 'typeorm';
-import { IsString, IsEmail, IsUrl, IsArray } from 'class-validator';
+import { Entity, Column, OneToMany } from 'typeorm';
+import { IsString, IsEmail, IsUrl, Length } from 'class-validator';
+import { Wish } from 'src/wishes/entities/wish.entity';
+import { Offer } from 'src/offers/entities/offer.entity';
+import { Wishlist } from 'src/wishlists/entities/wishlist.entity';
 import { BaseEntity } from 'src/entities/base.entity';
 
 @Entity()
 export class User extends BaseEntity {
   @Column({ unique: true })
+  @Length(1, 64)
   @IsString()
   username: string;
 
   @Column({ default: 'Пока ничего не рассказал о себе' })
+  @Length(1, 200)
   @IsString()
   about: string;
 
@@ -24,15 +29,12 @@ export class User extends BaseEntity {
   @IsString()
   password: string;
 
-  @Column()
-  @IsArray()
-  wishes: [];
+  @OneToMany(() => Wish, (wish) => wish.owner)
+  wishes: Wish[];
 
-  @Column()
-  @IsArray()
-  offers: [];
+  @OneToMany(() => Offer, (offer) => offer.user)
+  offers: Offer[];
 
-  @Column()
-  @IsArray()
-  wishlists: [];
+  @OneToMany(() => Wishlist, (wishlist) => wishlist.owner)
+  wishlists: Wishlist[];
 }

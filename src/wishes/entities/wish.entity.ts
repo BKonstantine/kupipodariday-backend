@@ -1,12 +1,7 @@
-import { Entity, Column } from 'typeorm';
-import {
-  IsArray,
-  IsInt,
-  IsNumber,
-  IsString,
-  IsUrl,
-  Length,
-} from 'class-validator';
+import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
+import { IsInt, IsNumber, IsString, IsUrl, Length } from 'class-validator';
+import { User } from 'src/users/entities/user.entity';
+import { Offer } from 'src/offers/entities/offer.entity';
 import { BaseEntity } from 'src/entities/base.entity';
 
 @Entity()
@@ -41,11 +36,9 @@ export class Wish extends BaseEntity {
   @IsString()
   description: string;
 
-  @Column()
-  @IsString()
-  owner: string;
+  @ManyToOne(() => User, (user) => user.wishes)
+  owner: User;
 
-  @Column()
-  @IsArray()
-  offers: [];
+  @OneToMany(() => Offer, (offer) => offer.item)
+  offers: Offer[];
 }
