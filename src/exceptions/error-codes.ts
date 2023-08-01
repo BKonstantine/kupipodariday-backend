@@ -3,7 +3,7 @@ import { HttpStatus } from '@nestjs/common';
 export enum ErrorCode {
   LoginOrPasswordIncorrect = 401,
   UserAlreadyExists = 409,
-  UserNotFound,
+  UserNotFound = 404,
 }
 
 export const code2message = new Map<ErrorCode, string>([
