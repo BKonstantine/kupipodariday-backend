@@ -7,7 +7,7 @@ import {
   IsInt,
 } from 'class-validator';
 
-export class SignupUserResponseDto {
+export class UserProfileResponseDto {
   @IsInt()
   id: number;
 
