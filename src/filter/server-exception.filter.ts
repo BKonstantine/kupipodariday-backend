@@ -10,7 +10,6 @@ export class ServerExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
 
     response.status(status).json({
-      errorCode: exception.code,
       message: exception.getResponse(),
       status: exception.getStatus(),
     });
