@@ -26,9 +26,9 @@ export class CreateUserDto {
   @Length(1, 200)
   @IsOptional()
   @IsString()
-  about?: string;
+  about: string;
 
   @IsOptional()
   @IsUrl()
-  avatar?: string;
+  avatar: string;
 }
