@@ -20,7 +20,8 @@ import { UserProfileResponseDto } from './dto/response/user-profile-response.dto
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @Get('me')
-  async findCurrentUser(@Request() { user }): Promise<UserProfileResponseDto> {
+  async findCurrentUser(@Request() { sub }): Promise<UserProfileResponseDto> {
+    const user = await this.usersService.findById(sub);
     const { password, ...rest } = user;
     return rest;
   }
