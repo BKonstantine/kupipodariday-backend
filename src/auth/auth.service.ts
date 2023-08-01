@@ -3,7 +3,8 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { HashService } from 'src/hash/hash.service';
-import { SigninUserResponseDto } from 'src/users/dto/response/signin-user-response.dto';
+import { ServerException } from 'src/exceptions/server.exception';
+import { ErrorCode } from 'src/exceptions/error-codes';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,7 @@ export class AuthService {
     private hashService: HashService,
   ) {}
 
-  auth(user: User) {
+  async auth(user: User) {
     const payload = { sub: user.id };
     return { access_token: this.jwtService.sign(payload) };
   }
@@ -21,12 +22,18 @@ export class AuthService {
   async validatePassword(username: string, password: string) {
     const user = await this.usersService.findByUsername(username);
 
-    /* В идеальном случае пароль обязательно должен быть захэширован */
-    if (user && user.password === password) {
-      /* Исключаем пароль из результата */
-      const { password, ...result } = user;
+    if (!user) {
+      throw new ServerException(ErrorCode.LoginOrPasswordIncorrect);
+    }
 
-      return user;
+    const isValid = await this.hashService.comparePassword(
+      password,
+      user.password,
+    );
+
+    if (isValid) {
+      const { password, ...result } = user;
+      return result;
     }
 
     return null;
