@@ -15,7 +15,7 @@ export class AuthController {
 
   @UseGuards(LocalGuard)
   @Post('signin')
-  signin(@Request() { user }): Promise<any> {
+  signin(@Request() { user }): Promise<SigninUserResponseDto> {
     return this.authService.auth(user);
   }
 
