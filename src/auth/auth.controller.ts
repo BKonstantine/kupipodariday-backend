@@ -1,5 +1,6 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { UsersService } from 'src/users/users.service';
 import { SigninUserDto } from 'src/users/dto/signin-user.dto';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { SigninUserResponseDto } from 'src/users/dto/response/signin-user-response.dto';
@@ -7,7 +8,10 @@ import { SignupUserResponseDto } from 'src/users/dto/response/signup-user-respon
 
 @Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Post('signin')
   signin(@Body() signinUserDto: SigninUserDto): string {
@@ -16,6 +20,6 @@ export class AuthController {
 
   @Post('signup')
   signup(@Body() createUserDto: CreateUserDto): Promise<SignupUserResponseDto> {
-    return;
+    return this.usersService.create(createUserDto);
   }
 }

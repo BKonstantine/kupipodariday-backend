@@ -6,9 +6,13 @@ import { Offer } from 'src/offers/entities/offer.entity';
 import { Wishlist } from 'src/wishlists/entities/wishlist.entity';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
+import { HashModule } from 'src/hash/hash.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Wish, Offer, Wishlist])],
+  imports: [
+    TypeOrmModule.forFeature([User, Wish, Offer, Wishlist]),
+    HashModule,
+  ],
   controllers: [UsersController],
   providers: [UsersService],
   exports: [UsersService],
