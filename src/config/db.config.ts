@@ -5,9 +5,7 @@ import { Wish } from 'src/wishes/entities/wish.entity';
 import { Wishlist } from 'src/wishlists/entities/wishlist.entity';
 import { Offer } from 'src/offers/entities/offer.entity';
 
-export const getDbConfig = (
-  configService: ConfigService,
-): TypeOrmModuleOptions => {
+export default (configService: ConfigService): TypeOrmModuleOptions => {
   return {
     type: 'postgres',
     host: configService.get('POSTGRES_HOST'),
