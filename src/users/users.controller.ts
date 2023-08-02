@@ -25,10 +25,13 @@ export class UsersController {
 
   @Get('me')
   @UseInterceptors(PasswordInterceptor)
-  async findCurrentUser(
-    @Request() { user: { id } },
-  ): Promise<UserProfileResponseDto> {
+  async findCurrentUser(@Request() { user: { id } }) {
     return await this.usersService.findById(id);
+  }
+
+  @Get('me/wishes')
+  async findCurrentUserWishes(@Request() { user: { id } }) {
+    return this.usersService.findWishes(id);
   }
 
   @Patch('me')
@@ -37,7 +40,7 @@ export class UsersController {
   async updateCurrentUser(
     @Request() { user: { id } },
     @Body() updateUserDto: UpdateUserDto,
-  ): Promise<UserProfileResponseDto> {
+  ) {
     return await this.usersService.update(id, updateUserDto);
   }
 }

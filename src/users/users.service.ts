@@ -7,6 +7,7 @@ import { HashService } from 'src/hash/hash.service';
 import { ServerException } from 'src/exceptions/server.exception';
 import { ErrorCode } from 'src/exceptions/error-codes';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Wish } from 'src/wishes/entities/wish.entity';
 
 @Injectable()
 export class UsersService {
@@ -39,6 +40,15 @@ export class UsersService {
       throw new ServerException(ErrorCode.ValidationError);
     }
     return this.findById(id);
+  }
+
+  async findWishes(id: number): Promise<Wish[]> {
+    const { wishes } = await this.usersRepository.findOne({
+      where: { id },
+      relations: ['wishes', 'wishes.owner'],
+    });
+
+    return wishes;
   }
 
   async findById(id: number) {
