@@ -7,7 +7,6 @@ import { HashService } from 'src/hash/hash.service';
 import { ServerException } from 'src/exceptions/server.exception';
 import { ErrorCode } from 'src/exceptions/error-codes';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserProfileResponseDto } from './dto/response/user-profile-response.dto';
 
 @Injectable()
 export class UsersService {
