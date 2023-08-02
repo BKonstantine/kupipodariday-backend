@@ -31,12 +31,18 @@ export class UsersController {
 
   @Get('me/wishes')
   async findCurrentUserWishes(@Request() { user: { id } }) {
-    return this.usersService.findWishes(id);
+    return await this.usersService.findWishes(id);
   }
 
   @Get(':username')
   async findUser(@Param() username: string) {
-    return this.usersService.findByUsername(username);
+    return await this.usersService.findByUsername(username);
+  }
+
+  @Get(':username/wishes')
+  async findUserWishes(@Param() username: string) {
+    const { id } = await this.usersService.findByUsername(username);
+    return await this.usersService.findWishes(id);
   }
 
   @Patch('me')
