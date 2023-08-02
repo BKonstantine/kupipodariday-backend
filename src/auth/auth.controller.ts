@@ -12,7 +12,7 @@ import { CreateUserDto } from '../users/dto/create-user.dto';
 import { SigninUserResponseDto } from 'src/users/dto/response/signin-user-response.dto';
 import { SignupUserResponseDto } from 'src/users/dto/response/signup-user-response.dto';
 import { LocalGuard } from './guards/local.guard';
-import { PasswordInterceptor } from 'src/interceptors/password.interceptor';
+import { PasswordUserInterceptor } from 'src/interceptors/password-user.interceptor';
 
 @Controller()
 export class AuthController {
@@ -27,7 +27,7 @@ export class AuthController {
     return this.authService.auth(user);
   }
 
-  @UseInterceptors(PasswordInterceptor)
+  @UseInterceptors(PasswordUserInterceptor)
   @Post('signup')
   signup(@Body() createUserDto: CreateUserDto): Promise<SignupUserResponseDto> {
     return this.usersService.create(createUserDto);

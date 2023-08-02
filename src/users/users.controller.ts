@@ -13,7 +13,8 @@ import {
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
-import { PasswordInterceptor } from 'src/interceptors/password.interceptor';
+import { PasswordUserInterceptor } from 'src/interceptors/password-user.interceptor';
+import { PasswordWishInterceptor } from 'src/interceptors/password-wish.interceptor';
 import { InvalidDataExceptionFilter } from 'src/filter/invalid-data-exception.filter';
 
 @UseGuards(JwtGuard)
@@ -21,22 +22,25 @@ import { InvalidDataExceptionFilter } from 'src/filter/invalid-data-exception.fi
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseInterceptors(PasswordUserInterceptor)
   @Get('me')
-  @UseInterceptors(PasswordInterceptor)
   async findCurrentUser(@Request() { user: { id } }) {
     return await this.usersService.findById(id);
   }
 
+  @UseInterceptors(PasswordWishInterceptor)
   @Get('me/wishes')
   async findCurrentUserWishes(@Request() { user: { id } }) {
     return await this.usersService.findWishes(id);
   }
 
+  @UseInterceptors(PasswordUserInterceptor)
   @Get(':username')
   async findUser(@Param('username') username: string) {
     return await this.usersService.findByUsername(username);
   }
 
+  @UseInterceptors(PasswordWishInterceptor)
   @Get(':username/wishes')
   async findUserWishes(@Param('username') username: string) {
     const { id } = await this.usersService.findByUsername(username);
@@ -45,7 +49,7 @@ export class UsersController {
 
   @Patch('me')
   @UseFilters(InvalidDataExceptionFilter)
-  @UseInterceptors(PasswordInterceptor)
+  @UseInterceptors(PasswordUserInterceptor)
   async updateCurrentUser(
     @Request() { user: { id } },
     @Body() updateUserDto: UpdateUserDto,

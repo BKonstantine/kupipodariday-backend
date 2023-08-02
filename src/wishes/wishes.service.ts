@@ -40,4 +40,8 @@ export class WishesService {
     });
     return wish;
   }
+
+  async deleteById(id: number) {
+    return;
+  }
 }
