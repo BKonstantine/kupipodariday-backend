@@ -4,11 +4,16 @@ import {
   ExecutionContext,
   CallHandler,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 @Injectable()
 export class PasswordInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    return;
+    return next.handle().pipe(
+      map((data) => {
+        const { password, ...rest } = data;
+        return rest;
+      }),
+    );
   }
 }
