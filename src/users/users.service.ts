@@ -35,7 +35,7 @@ export class UsersService {
       : updateUserDto;
     const user = await this.usersRepository.update(id, newUserData);
     if (user.affected === 0) {
-      throw new ServerException(ErrorCode.ValidationError);
+      throw new ServerException(ErrorCode.UpdateError);
     }
     return this.findById(id);
   }
@@ -45,7 +45,6 @@ export class UsersService {
       where: { id },
       relations: ['wishes', 'wishes.owner'],
     });
-
     return wishes;
   }
 
