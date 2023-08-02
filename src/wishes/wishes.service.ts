@@ -20,7 +20,10 @@ export class WishesService {
   }
 
   async findById(id: number) {
-    const wish = await this.wishRepository.findOneBy({ id });
+    const wish = await this.wishRepository.findOne({
+      where: { id },
+      relations: ['owner'],
+    });
     return wish;
   }
 }
