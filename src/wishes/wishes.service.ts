@@ -18,4 +18,9 @@ export class WishesService {
     const { password, ...rest } = await this.usersService.findById(ownerId);
     return await this.wishRepository.save({ ...createWishDto, owner: rest });
   }
+
+  async findById(id: number) {
+    const wish = await this.wishRepository.findOneBy({ id });
+    return wish;
+  }
 }
