@@ -5,7 +5,6 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   Request,
   UseGuards,
   UseFilters,
@@ -14,7 +13,6 @@ import {
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
-import { UserProfileResponseDto } from './dto/response/user-profile-response.dto';
 import { PasswordInterceptor } from 'src/interceptors/password.interceptor';
 import { InvalidDataExceptionFilter } from 'src/filter/invalid-data-exception.filter';
 

@@ -21,9 +21,7 @@ export class UsersService {
     try {
       const userWithHash =
         await this.hashService.getUserWithHash<CreateUserDto>(createUserDto);
-      const user = await this.usersRepository.save(userWithHash);
-      const { password, ...rest } = user;
-      return rest;
+      return await this.usersRepository.save(userWithHash);
     } catch (err) {
       if (err instanceof QueryFailedError) {
         throw new ServerException(ErrorCode.UserAlreadyExists);
