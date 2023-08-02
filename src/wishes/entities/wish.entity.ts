@@ -23,7 +23,7 @@ export class Wish extends BaseEntity {
   @IsNumber()
   price: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   @IsNumber()
   raised: number;
 
