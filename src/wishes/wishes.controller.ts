@@ -19,6 +19,16 @@ import { JwtGuard } from 'src/auth/guards/jwt.guard';
 export class WishesController {
   constructor(private readonly wishesService: WishesService) {}
 
+  @Get('last')
+  async getLastWish() {
+    return await this.wishesService.findLast();
+  }
+
+  @Get('top')
+  async getTopWish() {
+    return await this.wishesService.findTop();
+  }
+
   @Get(':id')
   async getWishById(@Param('id') id: number) {
     return await this.wishesService.findById(id);
