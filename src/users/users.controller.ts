@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FindUserDto } from './dto/find-user.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { PasswordUserInterceptor } from 'src/interceptors/password-user.interceptor';
 import { PasswordWishInterceptor } from 'src/interceptors/password-wish.interceptor';
@@ -32,6 +33,12 @@ export class UsersController {
   @Get('me/wishes')
   async findCurrentUserWishes(@Request() { user: { id } }) {
     return await this.usersService.findWishes(id);
+  }
+
+  @UseInterceptors(PasswordUserInterceptor)
+  @Post('find')
+  async searchUser(@Body() { query }: FindUserDto) {
+    return;
   }
 
   @UseInterceptors(PasswordUserInterceptor)

@@ -48,6 +48,10 @@ export class UsersService {
     return wishes;
   }
 
+  async search(query: string) {
+    return;
+  }
+
   async findById(id: number) {
     const user = await this.usersRepository.findOneBy({ id });
     return user;
