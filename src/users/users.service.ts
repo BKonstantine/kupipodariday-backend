@@ -6,6 +6,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { HashService } from 'src/hash/hash.service';
 import { ServerException } from 'src/exceptions/server.exception';
 import { ErrorCode } from 'src/exceptions/error-codes';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UserProfileResponseDto } from './dto/response/user-profile-response.dto';
 
 @Injectable()
 export class UsersService {
@@ -17,9 +19,8 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     try {
-      const userWithHash = await this.hashService.getUserWithHash(
-        createUserDto,
-      );
+      const userWithHash =
+        await this.hashService.getUserWithHash<CreateUserDto>(createUserDto);
       const user = await this.usersRepository.save(userWithHash);
       const { password, ...rest } = user;
       return rest;
@@ -28,6 +29,17 @@ export class UsersService {
         throw new ServerException(ErrorCode.UserAlreadyExists);
       }
     }
+  }
+
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const newUserData = updateUserDto.hasOwnProperty('password')
+      ? await this.hashService.getUserWithHash<UpdateUserDto>(updateUserDto)
+      : updateUserDto;
+    const user = await this.usersRepository.update(id, newUserData);
+    if (user.affected === 0) {
+      throw new ServerException(ErrorCode.ValidationError);
+    }
+    return this.findById(id);
   }
 
   async findById(id: number) {
