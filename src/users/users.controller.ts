@@ -34,6 +34,11 @@ export class UsersController {
     return this.usersService.findWishes(id);
   }
 
+  @Get(':username')
+  async findUser(@Param() username: string) {
+    return this.usersService.findByUsername(username);
+  }
+
   @Patch('me')
   @UseFilters(InvalidDataExceptionFilter)
   @UseInterceptors(PasswordInterceptor)
