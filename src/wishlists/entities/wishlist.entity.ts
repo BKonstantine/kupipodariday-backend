@@ -11,7 +11,7 @@ export class Wishlist extends BaseEntity {
   @IsString()
   name: string;
 
-  @Column()
+  @Column({ default: 'Описание временно отсутствует' })
   @Length(1, 1500)
   @IsOptional()
   @IsString()

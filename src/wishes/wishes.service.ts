@@ -25,6 +25,14 @@ export class WishesService {
     await this.wishRepository.update(id, updateData);
   }
 
+  async getWishListByIds(ids: number[]): Promise<Wish[]> {
+    const items = await this.wishRepository
+      .createQueryBuilder('item')
+      .where('item.id IN (:...ids)', { ids })
+      .getMany();
+    return items;
+  }
+
   async findLast() {
     return await this.wishRepository.find({
       order: { createdAt: 'desc' },
