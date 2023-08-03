@@ -45,4 +45,15 @@ export class WishlistsService {
       relations: ['owner', 'items'],
     });
   }
+
+  async findById(id: number) {
+    return await this.wishlistRepository.findOne({
+      where: { id },
+      relations: ['owner', 'items'],
+    });
+  }
+
+  async delete(id: number) {
+    return await this.wishlistRepository.delete(id);
+  }
 }

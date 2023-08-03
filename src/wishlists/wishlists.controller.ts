@@ -25,11 +25,21 @@ export class WishlistsController {
     return await this.wishlistsService.findAll();
   }
 
+  @Get(':id')
+  async getWishlist(@Param('id') id: number) {
+    return await this.wishlistsService.findById(id);
+  }
+
   @Post()
   async create(
     @Request() { user: { id } },
     @Body() createWishlistDto: CreateWishlistDto,
   ) {
     return await this.wishlistsService.create(id, createWishlistDto);
+  }
+
+  @Delete(':id')
+  async deleteWishlist(@Param('id') id: number) {
+    return await this.wishlistsService.delete(id);
   }
 }
