@@ -42,7 +42,7 @@ export class WishesService {
   async findById(id: number) {
     const wish = await this.wishRepository.findOne({
       where: { id },
-      relations: ['owner'],
+      relations: ['owner', 'offers', 'offers.user'],
     });
     return wish;
   }

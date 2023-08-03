@@ -43,7 +43,12 @@ export class UsersService {
   async findWishes(id: number): Promise<Wish[]> {
     const { wishes } = await this.usersRepository.findOne({
       where: { id },
-      relations: ['wishes', 'wishes.owner'],
+      relations: [
+        'wishes',
+        'wishes.owner',
+        'wishes.offers',
+        'wishes.offers.user',
+      ],
     });
     return wishes;
   }
