@@ -49,7 +49,15 @@ export class UsersService {
   }
 
   async search(query: string) {
-    return;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const user = emailRegex.test(query)
+      ? await this.findByEmail(query)
+      : await this.findByUsername(query);
+    if (!user) {
+      throw new ServerException(ErrorCode.UserNotFound);
+    }
+
+    return [user];
   }
 
   async findById(id: number) {

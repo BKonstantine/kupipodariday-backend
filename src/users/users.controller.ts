@@ -38,7 +38,7 @@ export class UsersController {
   @UseInterceptors(PasswordUserInterceptor)
   @Post('find')
   async searchUser(@Body() { query }: FindUserDto) {
-    return;
+    return await this.usersService.search(query);
   }
 
   @UseInterceptors(PasswordUserInterceptor)
