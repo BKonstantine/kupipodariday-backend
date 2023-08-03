@@ -7,7 +7,7 @@ export class OffersController {
   constructor(private readonly offersService: OffersService) {}
 
   @Post()
-  create(@Body() createOfferDto: CreateOfferDto) {
-    return this.offersService.create(createOfferDto);
+  async create(@Body() createOfferDto: CreateOfferDto) {
+    return await this.offersService.create(createOfferDto);
   }
 }
