@@ -25,8 +25,7 @@ export class OffersService {
     try {
       const item = await this.wishesService.findById(createOfferDto.itemId);
       const user = await this.usersService.findById(item.owner.id);
-      const totalRaised = item.raised + createOfferDto.amount;
-      console.log(totalRaised);
+      const totalRaised = (item.raised + createOfferDto.amount).toFixed(2);
 
       await this.wishesService.update(createOfferDto.itemId, {
         raised: totalRaised,
