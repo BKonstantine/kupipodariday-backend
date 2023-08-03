@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
+import { ServerException } from 'src/exceptions/server.exception';
+import { ErrorCode } from 'src/exceptions/error-codes';
 
 @Injectable()
 export class WishesService {
@@ -41,7 +43,11 @@ export class WishesService {
     return wish;
   }
 
-  async deleteById(id: number) {
-    return;
+  async delete(userId: number, wishId: number) {
+    const wish = await this.findById(wishId);
+    if (userId !== wish.owner.id) {
+      throw new ServerException(ErrorCode.Forbidden);
+    }
+    return await this.wishRepository.delete(wishId);
   }
 }
