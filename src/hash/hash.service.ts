@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { compare, genSalt, hash } from 'bcrypt';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class HashService {
