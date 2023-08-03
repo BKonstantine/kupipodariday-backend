@@ -39,4 +39,10 @@ export class WishlistsService {
       await queryRunner.release();
     }
   }
+
+  async findAll() {
+    return await this.wishlistRepository.find({
+      relations: ['owner', 'items'],
+    });
+  }
 }

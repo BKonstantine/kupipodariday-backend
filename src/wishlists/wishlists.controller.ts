@@ -20,6 +20,11 @@ import { JwtGuard } from 'src/auth/guards/jwt.guard';
 export class WishlistsController {
   constructor(private readonly wishlistsService: WishlistsService) {}
 
+  @Get()
+  async getAll() {
+    return await this.wishlistsService.findAll();
+  }
+
   @Post()
   async create(
     @Request() { user: { id } },
