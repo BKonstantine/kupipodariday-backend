@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { DataSource } from 'typeorm';
 import { Wish } from './entities/wish.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -14,6 +15,7 @@ export class WishesService {
     @InjectRepository(Wish)
     private wishRepository: Repository<Wish>,
     private usersService: UsersService,
+    private readonly dataSource: DataSource,
   ) {}
 
   async create(ownerId: number, createWishDto: CreateWishDto) {
@@ -49,5 +51,26 @@ export class WishesService {
       throw new ServerException(ErrorCode.Forbidden);
     }
     return await this.wishRepository.delete(wishId);
+  }
+
+  async copy(userId: number, wishId: number) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      const { id, createdAt, updatedAt, owner, ...wish } = await this.findById(
+        wishId,
+      );
+      const copiedWish = await this.create(userId, wish);
+      await this.wishRepository.update(wishId, {
+        copied: copiedWish.copied + 1,
+      });
+      await queryRunner.commitTransaction();
+      return copiedWish;
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
   }
 }
