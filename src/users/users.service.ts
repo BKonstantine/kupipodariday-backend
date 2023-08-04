@@ -7,7 +7,6 @@ import { HashService } from 'src/hash/hash.service';
 import { ServerException } from 'src/exceptions/server.exception';
 import { ErrorCode } from 'src/exceptions/error-codes';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Wish } from 'src/wishes/entities/wish.entity';
 
 @Injectable()
 export class UsersService {
@@ -40,16 +39,14 @@ export class UsersService {
     return this.findById(id);
   }
 
-  async findWishes(id: number): Promise<Wish[]> {
+  async findWishes(id: number, relations: string[]) {
     const { wishes } = await this.usersRepository.findOne({
       where: { id },
-      relations: [
-        'wishes',
-        'wishes.owner',
-        'wishes.offers',
-        'wishes.offers.user',
-      ],
+      relations,
     });
+    if (!wishes) {
+      throw new ServerException(ErrorCode.WishNotFound);
+    }
     return wishes;
   }
 
@@ -67,16 +64,25 @@ export class UsersService {
 
   async findById(id: number) {
     const user = await this.usersRepository.findOneBy({ id });
+    if (!user) {
+      throw new ServerException(ErrorCode.UserNotFound);
+    }
     return user;
   }
 
   async findByUsername(username: string) {
     const user = await this.usersRepository.findOneBy({ username });
+    if (!user) {
+      throw new ServerException(ErrorCode.UserNotFound);
+    }
     return user;
   }
 
   async findByEmail(email: string) {
     const user = await this.usersRepository.findOneBy({ email });
+    if (!user) {
+      throw new ServerException(ErrorCode.UserNotFound);
+    }
     return user;
   }
 }
