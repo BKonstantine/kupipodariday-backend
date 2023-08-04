@@ -27,6 +27,7 @@ export class OffersService {
       if (userId === item.owner.id) {
         throw new ServerException(ErrorCode.OfferForbidden);
       }
+
       const user = await this.usersService.findById(item.owner.id);
       const totalRaised = Number(
         (item.raised + createOfferDto.amount).toFixed(2),
@@ -46,6 +47,8 @@ export class OffersService {
         user,
       });
       await queryRunner.commitTransaction();
+      delete item.owner.password;
+      delete user.password;
       return offer;
     } catch (err) {
       await queryRunner.rollbackTransaction();
