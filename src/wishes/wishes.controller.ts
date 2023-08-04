@@ -32,8 +32,11 @@ export class WishesController {
 
   @UseInterceptors(PasswordWishInterceptor)
   @Get(':id')
-  async getWishById(@Param('id') id: number): Promise<Wish> {
-    return await this.wishesService.findById(id);
+  async getWishById(
+    @Request() { user: { id } },
+    @Param('id') wishId: number,
+  ): Promise<Wish> {
+    return await this.wishesService.findByIdWithOffer(id, wishId);
   }
 
   @Post()

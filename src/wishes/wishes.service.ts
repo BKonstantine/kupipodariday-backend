@@ -74,12 +74,31 @@ export class WishesService {
   async findById(id: number) {
     const wish = await this.wishRepository.findOne({
       where: { id },
-      relations: ['owner', 'offers', 'offers.user'],
+      relations: ['owner'],
     });
     if (!wish) {
       throw new ServerException(ErrorCode.WishNotFound);
     }
     return wish;
+  }
+
+  async findByIdWithOffer(userId: number, id: number) {
+    const wish = await this.wishRepository.findOne({
+      where: { id },
+      relations: ['owner', 'offers', 'offers.user'],
+    });
+
+    if (!wish) {
+      throw new ServerException(ErrorCode.WishNotFound);
+    }
+
+    if (userId === wish.owner.id) {
+      return wish;
+    } else {
+      const filteredOffers = wish.offers.filter((offer) => !offer.hidden);
+      wish.offers = filteredOffers;
+      return wish;
+    }
   }
 
   async delete(userId: number, wishId: number) {
