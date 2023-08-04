@@ -5,6 +5,8 @@ import { UsersService } from 'src/users/users.service';
 import { HashService } from 'src/hash/hash.service';
 import { ServerException } from 'src/exceptions/server.exception';
 import { ErrorCode } from 'src/exceptions/error-codes';
+import { SigninUserResponseDto } from 'src/users/dto/response/signin-user-response.dto';
+import { SignupUserResponseDto } from 'src/users/dto/response/signup-user-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -14,12 +16,15 @@ export class AuthService {
     private hashService: HashService,
   ) {}
 
-  async auth(user: User) {
+  async auth(user: User): Promise<SigninUserResponseDto> {
     const payload = { sub: user.id };
     return { access_token: this.jwtService.sign(payload) };
   }
 
-  async validatePassword(username: string, password: string) {
+  async validatePassword(
+    username: string,
+    password: string,
+  ): Promise<SignupUserResponseDto> {
     const user = await this.usersService.findByUsername(username);
 
     if (!user) {
