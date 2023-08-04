@@ -13,6 +13,7 @@ import { WishesService } from './wishes.service';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { PasswordWishInterceptor } from 'src/interceptors/password-wish.interceptor';
+import { Wish } from './entities/wish.entity';
 
 @UseGuards(JwtGuard)
 @Controller('wishes')
@@ -20,18 +21,18 @@ export class WishesController {
   constructor(private readonly wishesService: WishesService) {}
 
   @Get('last')
-  async getLastWish() {
+  async getLastWish(): Promise<Wish[]> {
     return await this.wishesService.findLast();
   }
 
   @Get('top')
-  async getTopWish() {
+  async getTopWish(): Promise<Wish[]> {
     return await this.wishesService.findTop();
   }
 
   @UseInterceptors(PasswordWishInterceptor)
   @Get(':id')
-  async getWishById(@Param('id') id: number) {
+  async getWishById(@Param('id') id: number): Promise<Wish> {
     return await this.wishesService.findById(id);
   }
 
@@ -39,12 +40,15 @@ export class WishesController {
   async create(
     @Request() { user: { id } },
     @Body() createWishDto: CreateWishDto,
-  ) {
+  ): Promise<Wish> {
     return await this.wishesService.create(id, createWishDto);
   }
 
   @Post(':id/copy')
-  async copy(@Request() { user: { id } }, @Param('id') wishId: number) {
+  async copy(
+    @Request() { user: { id } },
+    @Param('id') wishId: number,
+  ): Promise<Wish> {
     return await this.wishesService.copy(id, wishId);
   }
 
