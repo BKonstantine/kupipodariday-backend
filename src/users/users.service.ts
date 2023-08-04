@@ -45,7 +45,7 @@ export class UsersService {
       relations,
     });
     if (!wishes) {
-      throw new ServerException(ErrorCode.WishNotFound);
+      throw new ServerException(ErrorCode.WishesNotFound);
     }
     return wishes;
   }

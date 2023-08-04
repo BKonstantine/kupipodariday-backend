@@ -17,34 +17,58 @@ export class WishesService {
   ) {}
 
   async create(ownerId: number, createWishDto: CreateWishDto) {
-    const { password, ...rest } = await this.usersService.findById(ownerId);
-    return await this.wishRepository.save({ ...createWishDto, owner: rest });
+    try {
+      const { password, ...rest } = await this.usersService.findById(ownerId);
+      return await this.wishRepository.save({ ...createWishDto, owner: rest });
+    } catch {
+      throw new ServerException(ErrorCode.SaveError);
+    }
   }
 
   async update(id: number, updateData: any) {
-    await this.wishRepository.update(id, updateData);
+    const wish = await this.wishRepository.update(id, updateData);
+
+    if (wish.affected === 0) {
+      throw new ServerException(ErrorCode.UpdateError);
+    }
   }
 
   async getWishListByIds(ids: number[]): Promise<Wish[]> {
-    const items = await this.wishRepository
+    const wishes = await this.wishRepository
       .createQueryBuilder('item')
       .where('item.id IN (:...ids)', { ids })
       .getMany();
-    return items;
+
+    if (!wishes) {
+      throw new ServerException(ErrorCode.WishesNotFound);
+    }
+    return wishes;
   }
 
   async findLast() {
-    return await this.wishRepository.find({
+    const wishes = await this.wishRepository.find({
       order: { createdAt: 'desc' },
       take: 40,
     });
+
+    if (!wishes) {
+      throw new ServerException(ErrorCode.WishesNotFound);
+    }
+
+    return wishes;
   }
 
   async findTop() {
-    return await this.wishRepository.find({
+    const wishes = await this.wishRepository.find({
       order: { copied: 'desc' },
       take: 20,
     });
+
+    if (!wishes) {
+      throw new ServerException(ErrorCode.WishesNotFound);
+    }
+
+    return wishes;
   }
 
   async findById(id: number) {
@@ -52,6 +76,9 @@ export class WishesService {
       where: { id },
       relations: ['owner', 'offers', 'offers.user'],
     });
+    if (!wish) {
+      throw new ServerException(ErrorCode.WishNotFound);
+    }
     return wish;
   }
 
