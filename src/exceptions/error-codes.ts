@@ -10,6 +10,8 @@ export enum ErrorCode {
   WishesNotFound = 404,
   WishNotFound = 404,
   UserAlreadyExists = 409,
+  OfferForbidden = 409,
+  RaisedForbidden = 403,
   Forbidden = 403,
 }
 
@@ -27,6 +29,8 @@ export const code2message = new Map<ErrorCode, string>([
   [ErrorCode.UpdateError, 'Ошибка обновления переданных значений'],
   [ErrorCode.SaveError, 'Ошибка сохранения переданных значений'],
   [ErrorCode.Forbidden, 'Можно удалять только свои подарки'],
+  [ErrorCode.OfferForbidden, 'Можно поддержать только чужие подарки'],
+  [ErrorCode.RaisedForbidden, 'Слишком большая сумма поддержки'],
 ]);
 
 export const code2status = new Map<ErrorCode, HttpStatus>([
@@ -34,6 +38,12 @@ export const code2status = new Map<ErrorCode, HttpStatus>([
   [ErrorCode.UserAlreadyExists, HttpStatus.CONFLICT],
   [ErrorCode.UserNotFound, HttpStatus.NOT_FOUND],
   [ErrorCode.WishesNotFound, HttpStatus.NOT_FOUND],
+  [ErrorCode.WishNotFound, HttpStatus.NOT_FOUND],
+  [ErrorCode.WishlistNotFound, HttpStatus.NOT_FOUND],
+  [ErrorCode.WishlistsNotFound, HttpStatus.NOT_FOUND],
   [ErrorCode.UpdateError, HttpStatus.BAD_REQUEST],
+  [ErrorCode.SaveError, HttpStatus.BAD_REQUEST],
   [ErrorCode.Forbidden, HttpStatus.FORBIDDEN],
+  [ErrorCode.OfferForbidden, HttpStatus.CONFLICT],
+  [ErrorCode.RaisedForbidden, HttpStatus.FORBIDDEN],
 ]);

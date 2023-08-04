@@ -18,14 +18,23 @@ export class OffersService {
     private readonly dataSource: DataSource,
   ) {}
 
-  async create(createOfferDto: CreateOfferDto) {
+  async create(userId, createOfferDto: CreateOfferDto) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
       const item = await this.wishesService.findById(createOfferDto.itemId);
+      if (userId === item.owner.id) {
+        throw new ServerException(ErrorCode.OfferForbidden);
+      }
       const user = await this.usersService.findById(item.owner.id);
-      const totalRaised = (item.raised + createOfferDto.amount).toFixed(2);
+      const totalRaised = Number(
+        (item.raised + createOfferDto.amount).toFixed(2),
+      );
+
+      if (totalRaised > item.price) {
+        throw new ServerException(ErrorCode.RaisedForbidden);
+      }
 
       await this.wishesService.update(createOfferDto.itemId, {
         raised: totalRaised,
@@ -40,6 +49,7 @@ export class OffersService {
       return offer;
     } catch (err) {
       await queryRunner.rollbackTransaction();
+      throw err;
     } finally {
       await queryRunner.release();
     }
