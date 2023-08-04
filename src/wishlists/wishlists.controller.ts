@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   Request,
@@ -12,6 +11,7 @@ import {
 import { WishlistsService } from './wishlists.service';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { Wishlist } from './entities/wishlist.entity';
 
 @UseGuards(JwtGuard)
 @Controller('wishlistlists')
@@ -19,12 +19,12 @@ export class WishlistsController {
   constructor(private readonly wishlistsService: WishlistsService) {}
 
   @Get()
-  async getAll() {
+  async getAll(): Promise<Wishlist[]> {
     return await this.wishlistsService.findAll();
   }
 
   @Get(':id')
-  async getWishlist(@Param('id') id: number) {
+  async getWishlist(@Param('id') id: number): Promise<Wishlist> {
     return await this.wishlistsService.findById(id);
   }
 
@@ -32,7 +32,7 @@ export class WishlistsController {
   async create(
     @Request() { user: { id } },
     @Body() createWishlistDto: CreateWishlistDto,
-  ) {
+  ): Promise<Wishlist> {
     return await this.wishlistsService.create(id, createWishlistDto);
   }
 

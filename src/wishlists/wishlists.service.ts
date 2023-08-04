@@ -5,7 +5,8 @@ import { Wishlist } from './entities/wishlist.entity';
 import { WishesService } from 'src/wishes/wishes.service';
 import { UsersService } from 'src/users/users.service';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
-import { UpdateWishlistDto } from './dto/update-wishlist.dto';
+import { ServerException } from 'src/exceptions/server.exception';
+import { ErrorCode } from 'src/exceptions/error-codes';
 
 @Injectable()
 export class WishlistsService {
@@ -41,16 +42,28 @@ export class WishlistsService {
   }
 
   async findAll() {
-    return await this.wishlistRepository.find({
+    const wishlists = await this.wishlistRepository.find({
       relations: ['owner', 'items'],
     });
+
+    if (!wishlists) {
+      throw new ServerException(ErrorCode.WishlistsNotFound);
+    }
+
+    return wishlists;
   }
 
   async findById(id: number) {
-    return await this.wishlistRepository.findOne({
+    const wishlist = await this.wishlistRepository.findOne({
       where: { id },
       relations: ['owner', 'items'],
     });
+
+    if (!wishlist) {
+      throw new ServerException(ErrorCode.WishlistsNotFound);
+    }
+
+    return wishlist;
   }
 
   async delete(id: number) {
