@@ -20,6 +20,10 @@ export class PasswordWishInterceptor implements NestInterceptor {
             return { ...rest, owner: ownerWithoutPassword };
           });
         } else {
+          data.offers.map((offer) => {
+            delete offer.user.password;
+            return offer;
+          });
           const {
             owner: { password, ...ownerWithoutPassword },
             ...rest
