@@ -31,11 +31,11 @@ export class AuthService {
       user.password,
     );
 
-    if (isValid) {
+    if (!isValid) {
+      throw new ServerException(ErrorCode.LoginOrPasswordIncorrect);
+    } else {
       const { password, ...result } = user;
       return result;
     }
-
-    return null;
   }
 }

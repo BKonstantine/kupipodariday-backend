@@ -4,6 +4,7 @@ import {
   Body,
   Request,
   UseGuards,
+  UseFilters,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -13,7 +14,9 @@ import { SigninUserResponseDto } from 'src/users/dto/response/signin-user-respon
 import { SignupUserResponseDto } from 'src/users/dto/response/signup-user-response.dto';
 import { LocalGuard } from './guards/local.guard';
 import { PasswordUserInterceptor } from 'src/interceptors/password-user.interceptor';
+import { InvalidDataExceptionFilter } from 'src/filter/invalid-data-exception.filter';
 
+@UseFilters(InvalidDataExceptionFilter)
 @Controller()
 export class AuthController {
   constructor(
