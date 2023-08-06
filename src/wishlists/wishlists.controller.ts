@@ -41,7 +41,10 @@ export class WishlistsController {
   }
 
   @Delete(':id')
-  async deleteWishlist(@Param('id') id: number) {
-    return await this.wishlistsService.delete(id);
+  async deleteWishlist(
+    @Request() { user: { id } },
+    @Param('id') wishListId: number,
+  ) {
+    return await this.wishlistsService.delete(id, wishListId);
   }
 }

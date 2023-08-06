@@ -66,7 +66,13 @@ export class WishlistsService {
     return wishlist;
   }
 
-  async delete(id: number) {
-    return await this.wishlistRepository.delete(id);
+  async delete(userId: number, wishListId: number) {
+    const wishlist = await this.findById(wishListId);
+
+    if (userId !== wishlist.owner.id) {
+      throw new ServerException(ErrorCode.DeleteForbidden);
+    }
+
+    return await this.wishlistRepository.delete(wishListId);
   }
 }

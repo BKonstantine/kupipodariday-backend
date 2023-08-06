@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { Offer } from './entities/offer.entity';
@@ -25,7 +25,7 @@ export class OffersService {
     try {
       const item = await this.wishesService.findById(createOfferDto.itemId);
       if (userId === item.owner.id) {
-        throw new ServerException(ErrorCode.OfferForbidden);
+        throw new ForbiddenException('Можно поддержать только чужие подарки');
       }
 
       const user = await this.usersService.findById(item.owner.id);
