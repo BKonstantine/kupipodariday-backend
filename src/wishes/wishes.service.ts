@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { Repository, DataSource } from 'typeorm';
 import { Wish } from './entities/wish.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -25,10 +25,31 @@ export class WishesService {
     }
   }
 
-  async update(id: number, updateData: any) {
+  async raisedUpdate(id: number, updateData: any) {
     const wish = await this.wishRepository.update(id, updateData);
 
     if (wish.affected === 0) {
+      throw new ServerException(ErrorCode.UpdateError);
+    }
+  }
+
+  async update(userId: number, wishId: number, updateData: any) {
+    const wish = await this.findById(wishId);
+
+    if (userId !== wish.owner.id) {
+      throw new ForbiddenException('Вы не можете обновлять чужие подарки');
+    }
+
+    if (updateData.hasOwnProperty('price') && wish.raised > 0) {
+      throw new ForbiddenException('Вы не можете обновить стоимость');
+    }
+
+    const resultWishUpdate = await this.wishRepository.update(
+      wishId,
+      updateData,
+    );
+
+    if (resultWishUpdate.affected === 0) {
       throw new ServerException(ErrorCode.UpdateError);
     }
   }
